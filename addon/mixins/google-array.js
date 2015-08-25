@@ -1,6 +1,7 @@
 /* globals google */
 import Ember from 'ember';
 import helpers from '../core/helpers';
+import beforeObserver from 'ember-legacy-controllers/support/before-observer';
 
 var computed = Ember.computed;
 
@@ -143,7 +144,7 @@ export default Ember.Mixin.create({
     }
   })),
 
-  teardownGoogleArray: Ember.beforeObserver('googleArray', Ember.on('destroy', function () {
+  teardownGoogleArray: beforeObserver('googleArray', Ember.on('destroy', function () {
     if (this._googleListeners) {
       if (helpers.hasGoogleLib()) {
         // teardown observers/events

@@ -8,7 +8,7 @@ var run = Ember.run;
 var on = Ember.on;
 var observer = Ember.observer;
 var fmt = Ember.String.fmt;
-var forEach = Ember.EnumerableUtils.forEach;
+var forEach = [].forEach;
 var getProperties = Ember.getProperties;
 var get$ = Ember.get;
 var dummyCircle;
@@ -173,7 +173,7 @@ export default Ember.Component.extend(GoogleObjectMixin, {
           if (auto) {
             auto = auto === true ? VALID_FIT_BOUND_TYPES : auto.split(',');
             value = [];
-            forEach(auto, function (type) {
+            auto.forEach( function (type) {
               collectCoordsOf(type, this.get('_' + type), value);
             }, this);
           }
@@ -502,7 +502,7 @@ export default Ember.Component.extend(GoogleObjectMixin, {
       coords = coords.slice();
       if (get$(coords, 'length')) {
         bounds = new google.maps.LatLngBounds(helpers._latLngToGoogle(coords.shift()));
-        forEach(coords, function (point) {
+        coords.forEach(function (point) {
           bounds.extend(helpers._latLngToGoogle(point));
         });
       }

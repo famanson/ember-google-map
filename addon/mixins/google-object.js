@@ -1,12 +1,13 @@
 import Ember from 'ember';
 import GoogleObjectProperty from '../core/google-object-property';
 import GoogleObjectEvent from '../core/google-object-event';
+import beforeObserver from 'ember-legacy-controllers/support/before-observer';
 
 var computed = Ember.computed;
 var get$ = Ember.get;
 var fmt = Ember.String.fmt;
 var dasherize = Ember.String.dasherize;
-var forEach = Ember.EnumerableUtils.forEach;
+var forEach = [].forEach;
 
 /**
  * @extension GoogleObjectMixin
@@ -161,13 +162,14 @@ var GoogleObjectMixin = Ember.Mixin.create({
       defaultTarget = this.get('googleEventsTarget');
 
       // first add our core events
-      forEach(this.get('_coreGoogleEvents') || [], function (name) {
+      var events = this.get('_coreGoogleEvents') || [];
+      events.forEach(function (name) {
         res.push(new GoogleObjectEvent(name, {
           target:  this,
           method:  '_handleCoreEvent',
           prepend: true
         }));
-      });
+      }, this);
 
       // then add user defined events
       for (k in def) {
@@ -188,7 +190,7 @@ var GoogleObjectMixin = Ember.Mixin.create({
       }
 
       // finally add all overwritten events (`ev_xyz` properties)
-      forEach(Object.keys(this), function (key) {
+      Object.keys(this).forEach(function (key) {
         var d, matches, action;
         if ((matches = key.match(/^ev_(.+)$/)) && (action = this.get(key))) {
           d = {action: this.get(key)};
@@ -251,7 +253,7 @@ var GoogleObjectMixin = Ember.Mixin.create({
   /**
    * Unlink the google object
    */
-  unlinkGoogleObject: Ember.beforeObserver('googleObject', function () {
+  unlinkGoogleObject: beforeObserver('googleObject', function () {
     this.get('_compiledEvents').invoke('unlink');
     this.get('_compiledProperties').invoke('unlink');
   }),

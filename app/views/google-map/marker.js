@@ -46,7 +46,7 @@ export default GoogleMapCoreView.extend({
   lng:         alias('controller.lng'),
 
   // get the info window template name from the component or own controller
-  infoWindowTemplateName: computed.any('controller.infoWindowTemplateName', 'googleMapComponent.markerInfoWindowTemplateName'),
+  infoWindowTemplateName: computed.or('controller.infoWindowTemplateName', 'googleMapComponent.markerInfoWindowTemplateName'),
 
   infoWindowAnchor: oneWay('googleObject'),
 

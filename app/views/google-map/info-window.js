@@ -21,7 +21,7 @@ export default GoogleMapCoreView.extend({
   googleFQCN: 'google.maps.InfoWindow',
 
   // will be either the marker using us, or the component if this is a detached info-window
-  templateName: computed.any('controller.templateName', 'parentView.infoWindowTemplateName'),
+  templateName: computed.or('controller.templateName', 'parentView.infoWindowTemplateName'),
 
   googleProperties: {
     zIndex:    {event: 'zindex_changed', cast: helpers.cast.integer},
