@@ -118,14 +118,16 @@ export default GoogleMapCoreView.extend({
     var element = this.get('element');
     if (!this._placeholderElement) {
       this._placeholderElement = document.createElement(element.nodeName);
-      element.parentNode.replaceChild(this._placeholderElement, element);
+      if (element.parentNode) {
+        element.parentNode.replaceChild(this._placeholderElement, element);
+      }
     }
     return element;
   },
 
   _restoreViewElement: function () {
     var element = this.get('element');
-    if (this._placeholderElement) {
+    if (this._placeholderElement && this._placeholderElement.parentNode) {
       this._placeholderElement.parentNode.replaceChild(element, this._placeholderElement);
       this._placeholderElement = null;
     }
