@@ -180,11 +180,20 @@ export default Ember.Mixin.create({
 
   handleGoogleSetAt: function (index) {
     if (this.get('observersEnabled')) {
+      var object = this.objectAt(index);
+
       this.set('observersEnabled', false);
-      this._stopObservingEmberProperties(this.objectAt(index));
-      this.replace(index, 1, [
-        this._startObservingEmberProperties(this._google2ember(this.get('googleArray').getAt(index)))
-      ]);
+
+      var newObject = this._google2ember(this.get('googleArray').getAt(index))
+
+      if (Ember.typeOf(object) === 'instance') {
+        object.setProperties(newObject);
+      } else {
+        this._stopObservingEmberProperties(object);
+        this.replace(index, 1, [newObject]);
+        this._startObservingEmberProperties(newObject);
+      }
+
       this.set('observersEnabled', true);
     }
   },
