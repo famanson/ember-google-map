@@ -162,9 +162,20 @@ export default Ember.Mixin.create({
   handleGoogleInsertAt: function (index) {
     if (this.get('observersEnabled')) {
       this.set('observersEnabled', false);
-      this.replace(index, 0, [
-        this._startObservingEmberProperties(this._google2ember(this.get('googleArray').getAt(index)))
-      ]);
+
+      var modelName = this.get('firstObject').constructor.modelName;
+      var newObject = this._google2ember(this.get('googleArray').getAt(index));
+
+      if (modelName) {
+        var record = this.store.createRecord(modelName, JSON.parse(JSON.stringify(newObject)));
+        this.insertAt(index, record);
+        this._startObservingEmberProperties(record);
+      } else {
+        this.replace(index, 0, [
+          this._startObservingEmberProperties(newObject)
+        ]);
+      }
+
       this.set('observersEnabled', true);
     }
   },
@@ -205,7 +216,10 @@ export default Ember.Mixin.create({
       this.set('observersEnabled', false);
       googleArray = this.get('googleArray');
       for (i = 0; i < removeCount; i++) {
-        this._stopObservingEmberProperties(this.objectAt(start));
+        var obj = this.objectAt(start);
+        if (obj) {
+          this._stopObservingEmberProperties(obj);
+        }
         googleArray.removeAt(start);
       }
       slice = this._ember2google(
