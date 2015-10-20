@@ -210,6 +210,10 @@ export default Ember.Mixin.create({
   },
 
   arrayContentDidChange: function (start, removeCount, addCount) {
+    this._super.apply(this, arguments);
+
+    if (Ember.isNone(removeCount)) { return }
+
     var i, googleArray, slice;
     this._super.apply(this, arguments);
     if (this.get('observersEnabled')) {
@@ -223,7 +227,7 @@ export default Ember.Mixin.create({
         googleArray.removeAt(start);
       }
       slice = this._ember2google(
-        this._startObservingEmberProperties(this.toArray().slice(start, start + addCount), true), true
+        this._startObservingEmberProperties(this.toArray().compact().slice(start, start + addCount), true), true
       );
       while (slice.length) {
         googleArray.insertAt(start, slice.pop());
