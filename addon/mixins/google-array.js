@@ -228,7 +228,7 @@ export default Ember.Mixin.create({
       }
       slice = this._ember2google(
         this._startObservingEmberProperties(this.toArray().compact().slice(start, start + addCount), true), true
-      );
+      ).compact();
       while (slice.length) {
         googleArray.insertAt(start, slice.pop());
       }
